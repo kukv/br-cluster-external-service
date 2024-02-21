@@ -25,7 +25,7 @@ services:
   create-bucket:
     image: minio/mc
     container_name: create-bucket
-    olumes:
+    volumes:
       - ./minio/certs:/root/.mc/certs/CAs
     depends_on:
       - minio
