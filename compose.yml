@@ -7,3 +7,7 @@ services:
     extends:
       file: docker/minio.yml
       service: minio
+  create-bucket:
+    extends:
+      file: docker/minio.yml
+      service: create-bucket

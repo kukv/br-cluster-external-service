@@ -10,8 +10,6 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    extra_hosts:
-      - "s3.bright-room.work:127.0.0.1"
     volumes:
       - /storage/minio/data:/data
       - /storage/minio/config:/root/.minio
@@ -23,3 +21,18 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  create-bucket:
+    image: minio/mc
+    container_name: create-bucket
+    olumes:
+      - ./minio/certs:/root/.mc/certs/CAs
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add bright-room https://minio:9000 bradmin bradmin0000) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc mb bright-room/test-bucket;
+      /usr/bin/mc policy download bright-room/test-bucket;
+      exit 0;
+      "
