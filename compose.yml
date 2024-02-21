@@ -1,0 +1,9 @@
+services:
+  haproxy:
+    extends:
+      file: docker/haproxy.yml
+      service: haproxy
+  minio:
+    extends:
+      file: docker/minio.yml
+      service: minio

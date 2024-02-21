@@ -1,0 +1,25 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    hostname: minio
+    environment:
+      MINIO_ROOT_USER: bradmin
+      MINIO_ROOT_PASSWORD: bradmin0000
+      MINIO_SERVER_URL: https://s3.bright-room.work:9000
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    extra_hosts:
+      - "s3.bright-room.work:127.0.0.1"
+    volumes:
+      - /storage/minio/data:/data
+      - /storage/minio/config:/root/.minio
+      - ./minio/certs/minio.crt:/root/.minio/certs/public.crt
+      - ./minio/certs/minio.key:/root/.minio/certs/private.key
+    command: ["server", "/data", "--address", ":9000", "--console-address", ":9001"]
+    healthcheck:
+      test: [ "CMD", "mc", "ready", "local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
